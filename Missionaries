@@ -1,0 +1,92 @@
+from collections import deque
+
+class State:
+    def __init__(self, missionaries, cannibals, boat, parent=None):
+        self.missionaries = missionaries
+        self.cannibals = cannibals
+        self.boat = boat
+        self.parent = parent
+
+    def is_valid(self):
+        if self.missionaries < 0 or self.cannibals < 0 or self.missionaries > 3 or self.cannibals > 3:
+            return False
+        if (self.missionaries > 0 and self.missionaries < self.cannibals):
+            return False
+        missionaries_other_side = 3 - self.missionaries
+        cannibals_other_side = 3 - self.cannibals
+        if (missionaries_other_side > 0 and missionaries_other_side < cannibals_other_side):
+            return False
+        return True
+
+    def is_goal(self):
+        return self.missionaries == 0 and self.cannibals == 0 and self.boat == 0
+
+    def get_successors(self):
+        successors = []
+        if self.boat == 1:
+            new_states = [
+                State(self.missionaries - 1, self.cannibals, 0, self),
+                State(self.missionaries - 2, self.cannibals, 0, self),
+                State(self.missionaries, self.cannibals - 1, 0, self),
+                State(self.missionaries, self.cannibals - 2, 0, self),
+                State(self.missionaries - 1, self.cannibals - 1, 0, self),
+            ]
+        else:
+            new_states = [
+                State(self.missionaries + 1, self.cannibals, 1, self),
+                State(self.missionaries + 2, self.cannibals, 1, self),
+                State(self.missionaries, self.cannibals + 1, 1, self),
+                State(self.missionaries, self.cannibals + 2, 1, self),
+                State(self.missionaries + 1, self.cannibals + 1, 1, self),
+            ]
+        
+        for state in new_states:
+            if state.is_valid():
+                successors.append(state)
+        return successors
+
+    def __eq__(self, other):
+        return self.missionaries == other.missionaries and self.cannibals == other.cannibals and self.boat == other.boat
+
+    def __hash__(self):
+        return hash((self.missionaries, self.cannibals, self.boat))
+
+    def __repr__(self):
+        return f"({self.missionaries}, {self.cannibals}, {self.boat})"
+
+
+def bfs(initial_state):
+    queue = deque([initial_state])
+    visited = set()
+    visited.add(initial_state)
+
+    while queue:
+        state = queue.popleft()
+        if state.is_goal():
+            return state
+        successors = state.get_successors()
+        for successor in successors:
+            if successor not in visited:
+                queue.append(successor)
+                visited.add(successor)
+    return None
+
+
+def print_solution(solution):
+    path = []
+    while solution:
+        path.append(solution)
+        solution = solution.parent
+    path.reverse()
+    for state in path:
+        print(state)
+
+
+if __name__ == "__main__":
+    initial_state = State(3, 3, 1)
+    solution = bfs(initial_state)
+    if solution:
+        print("Solution found!")
+        print_solution(solution)
+    else:
+        print("No solution found.")
