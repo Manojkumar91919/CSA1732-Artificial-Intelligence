@@ -1,0 +1,30 @@
+student(alice, cs101).
+student(bob, cs102).
+student(carol, cs101).
+student(dave, cs103).
+
+% teacher(Name, Subject_Code)
+teacher(prof_john, cs101).
+teacher(prof_mary, cs102).
+teacher(prof_susan, cs103).
+
+% subject_code(Subject_Code, Subject_Name)
+subject_code(cs101, 'Computer Science Basics').
+subject_code(cs102, 'Data Structures').
+subject_code(cs103, 'Algorithms').
+
+% Rules
+% student_subject(StudentName, SubjectName)
+student_subject(StudentName, SubjectName) :-
+    student(StudentName, SubjectCode),
+    subject_code(SubjectCode, SubjectName).
+
+% student_teacher(StudentName, TeacherName)
+student_teacher(StudentName, TeacherName) :-
+    student(StudentName, SubjectCode),
+    teacher(TeacherName, SubjectCode).
+
+% teacher_subject(TeacherName, SubjectName)
+teacher_subject(TeacherName, SubjectName) :-
+    teacher(TeacherName, SubjectCode),
+    subject_code(SubjectCode, SubjectName).
