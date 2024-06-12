@@ -1,0 +1,22 @@
+
+planet(mercury, terrestrial, 4879, 57.9, 0).
+planet(venus, terrestrial, 12104, 108.2, 0).
+planet(earth, terrestrial, 12742, 149.6, 1).
+planet(mars, terrestrial, 6779, 227.9, 2).
+planet(jupiter, gas_giant, 139820, 778.5, 79).
+planet(saturn, gas_giant, 116460, 1434.0, 82).
+planet(uranus, gas_giant, 50724, 2871.0, 27).
+planet(neptune, gas_giant, 49244, 4495.1, 14).
+
+planet_type(Planet, Type) :-
+    planet(Planet, Type, _, _, _).
+
+% planet_diameter(Planet, Diameter)
+planet_diameter(Planet, Diameter) :-
+    planet(Planet, _, Diameter, _, _).
+
+% planet_distance(Planet, Distance)
+planet_distance(Planet, Distance) :-
+    planet(Planet, _, _, Distance, _).
+planet_moons(Planet, Moons) :-
+    planet(Planet, _, _, _, Moons).
